@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>The GraphGist Competition September 2013</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="Kidscraft samlar barn i åldern 9-14 år för en spännande eftermiddag på stapeln den 24. Augusti 2013. Hej">
+    <meta name="keywords"
+          content="one page,single page,bootstrap,mobile,app,apps,twitter bootstrap,node,node.js,portal,node starter,node template,twitter bootstrap,bootstrap,site,template,node blog,node app,site,cross,cross platform,web or mobile,responsive,boilerplate,html,javascript,css">
+
+    <script src="codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="/codemirror/lib/codemirror.css">
+    <script src="codemirror/mode/css/css.js"></script>
+    <script src="codemirror/mode/javascript/javascript.js"></script>
+    <script src="codemirror/mode/xml/xml.js"></script>
+    <script src="codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        .footer {
+            position: fixed;
+            z-index: 10;
+            bottom: 5px;
+            right: 10px;
+        }
+
+        #menuSticky {
+            z-index: 5;
+            position: fixed;
+            top: 50px;
+            right: 16px;
+            padding: 7px;
+            padding-top: 12px;
+        }
+
+        #menuSticky ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        #menuSticky li {
+            position: relative;
+            background: none repeat scroll 0 0 #cccccc;
+            border: 1px solid #aaaaaa;
+            border-radius: 15px 15px 15px 15px;
+            cursor: pointer;
+            height: 9px;
+            margin: 10px 10px 0px 0px;
+            width: 18px;
+            vertical-align: bottom;
+        }
+
+        #menuSticky li.active {
+            background-color: #ffffff;
+            background-image: -moz-linear-gradient(center top, #FFFFFF, #EEEEEE);
+            background-repeat: repeat-x;
+        }
+
+        #menuSticky li:hover {
+            background: none repeat scroll 0 0 #EEEEEE;
+        }
+
+        #menuSticky a {
+            outline: 0;
+            vertical-align: top;
+            margin: 0px 0px 0px 25px;
+            position: relative;
+            top: -5px;
+        }
+
+        section {
+            padding-top: 30px;
+        }
+
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="bootstrap/img/favicon.ico">
+    <link rel="apple-touch-icon" href="bootstrap/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="bootstrap/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="bootstrap/img/apple-touch-icon-114x114.png">
+
+    <!-- load jquery from google CDN, with a protocol relative URL; otherwise local if offline -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="bootstrap/js/jquery-1.7.1.min.js"><\/script>')</script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!--<script type="text/javascript" src="http://plugins.in1.com/scripts/socialist.js"></script>-->
+    <script>
+        function unspace(str) {
+            if (str == null)
+                return;
+
+            return str.replace("!", "").toLowercase().replace(" ", "");
+        }
+
+        $(document).ready(function () {
+
+            $('#scrollTop').click(function () {
+                $('html, body').animate({scrollTop: 0}, 'slow');
+                return false;
+            });
+
+            $('[title]').tooltip();
+
+            /* dot nav */
+            redrawDotNav();
+
+            $(window).bind('scroll', function (e) {
+                //parallaxScroll();
+                redrawDotNav();
+            });
+
+            function redrawDotNav() {
+
+                var topNavHeight = 61;
+
+                $('#menuSticky li a').removeClass('active').parent('li').removeClass('active');
+
+                var numDivs = $('section.sec').length;
+                $('section.sec').each(function (i, item) {
+                    var ele = $(item), nextTop;
+
+                    if ($('section.sec' + (i + 2)).offset() !== null) {
+                        nextTop = $('section.sec' + (i + 2)).offset().top;
+                    }
+                    else {
+                        nextTop = $(document).height();
+                    }
+
+                    //console.log("sec"+(i+1));
+
+                    if (ele.offset() !== null) {
+                        thisTop = ele.offset().top - ((nextTop - ele.offset().top) / numDivs);
+                    }
+                    else {
+                        thisTop = 0;
+                    }
+
+                    var docTop = $(document).scrollTop() + topNavHeight;
+
+                    if (docTop >= thisTop && (docTop < nextTop)) {
+                        $('#menuSticky a.sec' + (i + 1)).parent('li').addClass('active');
+                    }
+                });
+
+            }
+
+            /* end dot nav */
+
+            $('#section-menu li:first').addClass("active");
+            $('#section-menu li a, #admin-menu li a, .smooth, #menuSticky li').click(function () {
+                var id = $(this).attr("href").replace("/", ""),
+                        posi,
+                        ele,
+                        padding = parseInt($('body').css('padding-top'));
+
+                ele = $(id);
+                posi = ($(ele).offset() || 0).top - padding;
+
+                $('html, body').animate({scrollTop: posi}, 'slow');
+
+                return false;
+            });
+
+            $('#main-menu li a').click(function () {
+                $('#main-menu li').removeClass('active');
+                $(this).parent().addClass('active');
+            });
+
+            var test = 'dummy'
+
+        });
+
+        /* alert handling */
+
+        function showAlert(msg) {
+            if (typeof msg == "undefined")
+                return;
+
+            console.log("alerting:" + msg);
+
+            $('#msgBox').html(msg + '<a class="close" href="#">&times;</a>').fadeIn().delay(3500).fadeOut('slow');
+
+            return false;
+        }
+
+
+        /* end alert handling */
+
+    </script>
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">Graphify - the Graphgist competition.</a>
+
+            <div class="nav-collapse" id="main-menu">
+                <ul class="nav" id="section-menu">
+                    <li id="menuIntro"><a href="/#intro" title="Intro">Intro</a></li>
+                    <li id="menuVad"><a href="/#what" title="What">What</a></li>
+                    <li id="menuOne"><a href="/#rules" title="Rule">How does it work?</a></li>
+                    <li id="menuVem"><a href="/#prizes" title="Prizes">Prizes</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="intro" class="sec sec1 pull-center">
+    <h2></h2>
+
+    <div class="slide pull-center fill">
+        <img class="fill" src="img/graphgist.png"/>
+    </div>
+
+</section>
+<hr>
+
+
+<section id="what" class="sec sec2 fill">
+    <div class="span6 pull-center" style="text-align: left;">
+        <h1>What is Graphify?</h1>
+
+        <h2>Outdo yourself - create the most impressive Graph Gist ever</h2>
+
+        <p>Join our <a href="http://gist.neo4j.org" target="_blank">GraphGist</a> competition this month.
+
+            We want to encourage you to model a domain that you know / like in a graph model and describe it
+            interactively
+            in a GraphGist.
+
+            A GraphGist is just a really simple <a href="http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/"
+                                                   target="_blank">AsciiDoc</a> file, and can be hosted simply in a
+            <a href="http://gist.github.com/" target="_blank">GitHub Gist</a>.
+
+            To make this more interesting we want to sponsor ...</p>
+
+        <p>TODO: Add graphgist video to graphgists</p>
+    </div>
+
+</section>
+<hr>
+<section id="rules">
+    <div class="span6 pull-center">
+        <h1>The rules</h1>
+
+        <h2>How does it work?</h2>
+
+        <p>Find a great domain (Music, Dating, Comics, Healthcare, Politics, Sciences, ...)</p>
+
+        <p>Whiteboard a good example graph model.</p>
+
+        <p>Determine interesting use-cases.</p>
+
+        <p>Create Cypher statements for setup and query-use-cases.</p>
+
+        <p>The graphgist needs to be public, so the ASCIIDOC course can be shown.</p>
+
+        <p>Write a good description and create a pretty model picture.</p>
+
+        <p>Compose it all nicely in your asciidoc-graphgist-file.</p>
+
+        <h2>How do I participate?</h2>
+
+        <p>Tweet the public URL of your <a href="http://gist.neo4j.org">graphgist</a> and add the tags #graphify and #graphgist to the tweet.</p>
+
+        <p>Add your gist under the section "Graphgist competition" in the graphgist collection Wiki (see "resources" in
+            the graphgist header)</p>
+
+        <p>The GraphGist needs to be registered before Sept 30, 2013</p>
+
+
+    </div>
+
+</section>
+<hr>
+<section id="prizes">
+    <div class="span6 pull-center">
+        <h1>The prizes</h1>
+
+        <h2>#1 - 500 USD</h2>
+
+        <h2>#2 - 300 USD</h2>
+
+        <h2>#3 - 200 USD</h2>
+
+
+    </div>
+
+</section>
+
+
+<div data-spy="affix" data-offset-top="150" id="menuSticky" class="pull-right">
+    <ul>
+        <li title="Intro" href="/#intro"><a href="/#intro" class="sec1 smooth"></a></li>
+        <li title="What" href="/#what"><a href="/#what" class="sec2 smooth"></a></li>
+        <li title="Rules" href="/#rules"><a href="/#rules" class="sec3 smooth"></a></li>
+        <li title="Prizes" href="/#prizes"><a href="/#prizes" class="sec4 smooth"></a></li>
+    </ul>
+</div>
+
+<br><br><br><br>
+
+<footer class="footer">
+    <p class="pull-right"><a href="#" id="scrollTop">scroll to top</a></p>
+</footer>
+
+<script src="/bootstrap/js/bootstrap-carousel.js"></script>
+<script src="/bootstrap/js/bootstrap-transition.js"></script>
+
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36671748-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+
+<!--[if lt IE 7 ]>
+<script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+<script defer>window.attachEvent('onload', function () {
+    CFInstall.check({mode: 'overlay'})
+})</script>
+<![endif]-->
+</body>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-43525210-1', 'kidscraft.se');
+    ga('send', 'pageview');
+
+</script>
+<script>
+    $(document).ready(function () {
+
+        $('#scrollTop').click(function () {
+            $('html, body').animate({scrollTop: 0}, 'slow');
+            return false;
+        });
+    });
+</script>
+</html>
